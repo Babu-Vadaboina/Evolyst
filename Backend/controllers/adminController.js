@@ -1,4 +1,5 @@
 const { get } = require("mongoose");
+const { adminModel } = require("../db");
 
 const signin = (req, res) => {
   res.json({
