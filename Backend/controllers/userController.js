@@ -1,5 +1,6 @@
 const { userModel } = require("../db");
 const express = require("express");
+const jwt = require("jsonwebtoken");
 
 const signup = async (req, res) => {
   const { name, email, password, firstname, lastname } = req.body;
@@ -22,10 +23,20 @@ const signup = async (req, res) => {
   });
 };
 
-const signin = (req, res) => {
-  res.json({
-    message: "user signin successfully",
-  });
+const signin = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await userModel.findOne({ email, password });
+  if (user) {
+    const token = jwt.sign({ id: user._id }, process.env.JWT_USER_TOKEN);
+    res.status(200).json({
+      token: token,
+      message: "user signin successfully",
+    });
+  } else {
+    res.status(403).json({
+      message: "invalid credentials",
+    });
+  }
 };
 
 const purchases = (req, res) => {
