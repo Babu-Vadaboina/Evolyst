@@ -5,11 +5,11 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
+app.use(express.json());
+
 const userRouter = require("./routes/user");
 const courseRouter = require("./routes/course");
 const adminRouter = require("./routes/admin");
-
-app.use(express.json());
 
 app.use("/api/v1/admins", adminRouter);
 app.use("/api/v1/users", userRouter);
@@ -19,7 +19,7 @@ const connectDb = async () => {
   console.log(process.env.MONGO_URI);
   try {
     await mongoose.connect(process.env.MONGO_URI, {
-      usenewurlparser: true,
+      useNewUrlParser: true,
       useUnifiedTopology: true,
     });
     console.log("Mongo DB connected Successfully");
