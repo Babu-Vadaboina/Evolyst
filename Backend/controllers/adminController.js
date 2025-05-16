@@ -1,5 +1,5 @@
 const { get } = require("mongoose");
-const { adminModel } = require("../db");
+const { adminModel, courseModel } = require("../db");
 const jwt = require("jsonwebtoken");
 
 const signup = async (req, res) => {
@@ -39,17 +39,73 @@ const signin = async (req, res) => {
   }
 };
 
-const createCourse = (req, res) => {
-  res.json({
-    message: "admin create course endpoint",
-  });
+const createCourse = async (req, res) => {
+  const adminId = req.userId;
+  try {
+    const {
+      title,
+      description,
+      price,
+      imageUrl,
+      creatorId: adminId,
+    } = req.body;
+    const course = await courseModel.create({
+      title,
+      description,
+      price,
+      imageUrl,
+      creatorId: adminId,
+    });
+    res.json({
+      courseId: course._id,
+      message: "course created successfully",
+    });
+  } catch (err) {
+    res.status(403).json({
+      message: err.message,
+    });
+  }
 };
-const updateCourse = (req, res) => {
-  res.json({
-    message: "admin update course endpoint",
-  });
+const updateCourse = async (req, res) => {
+  const adminId = req.userId;
+  const { title, description, price, imageUrl } = req.body;
+
+  try {
+    const course = await courseModel.updateOne(
+      {
+        _id: req.params.id,
+        creatorId: adminId,
+      },
+      {
+        title,
+        description,
+        price,
+        imageUrl,
+      }
+    );
+    res.json({
+      message: "course updated successfully",
+      courseId: course._id,
+    });
+  } catch (err) {
+    res.status(403).json({
+      message: err.message,
+    });
+  }
 };
-const getAllCourses = (req, res) => {
+const getAllCourses = async (req, res) => {
+  const adminId = req.userId;
+  try {
+    const courses = await courseModel.find({ creatorId: adminId });
+    res.json({
+      message: "all corses for this admin fetched successfully",
+      courses,
+    });
+  } catch (err) {
+    res.status(403).json({
+      message: err.message,
+    });
+  }
   res.json({
     message: " admin to fetch all available courses endpoint",
   });
