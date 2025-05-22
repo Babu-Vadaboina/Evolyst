@@ -8,7 +8,7 @@ import {
 
 export default function Navbar() {
   return (
-    <div className="fixed top-0 left-0 w-full z-50  flex justify-between items-center px-4 py-6">
+    <div className="fixed top-0 left-0 w-full z-50  flex justify-between items-center px-4 py-6 text-white">
       <div className="flex justify-start items-center gap-4">
         <div className=" flex ">
           <span className="text-xl font-semibold"> EVOLYTE</span>
